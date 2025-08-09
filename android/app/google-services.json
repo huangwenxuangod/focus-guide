@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "94376731751",
+    "project_id": "focus-on-me-fc652",
+    "storage_bucket": "focus-on-me-fc652.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94376731751:android:ad83a635f2eae53dc5e0c2",
+        "android_client_info": {
+          "package_name": "com.example.focus_guide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUQr1A49LO84RtR7SZGnnLgUfiocBAZoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
