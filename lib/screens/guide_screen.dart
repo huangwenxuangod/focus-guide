@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/common_widgets.dart';
+import '../widgets/animated_widgets.dart';
+import '../theme/app_theme.dart';
 
 class GuideScreen extends StatelessWidget {
   const GuideScreen({super.key});
@@ -7,19 +9,42 @@ class GuideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('引导示例'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: AppTheme.primaryColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: AnimatedWidgets.slideInLeft(
+          delay: const Duration(milliseconds: 100),
+          child: Text(
+            '引导体验',
+            style: AppTheme.headingMedium.copyWith(
+              color: AppTheme.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(AppTheme.spacingL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeaderSection(context),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppTheme.spacingXL),
             _buildActivitiesSection(context),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppTheme.spacingXL),
             _buildPreviewSection(context),
+            const SizedBox(height: AppTheme.spacingXL),
+            _buildActionSection(context),
+            const SizedBox(height: AppTheme.spacingL),
           ],
         ),
       ),
@@ -27,42 +52,118 @@ class GuideScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderSection(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return AnimatedWidgets.fadeInContainer(
+      delay: const Duration(milliseconds: 200),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppTheme.spacingL),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              AppTheme.primaryColor.withOpacity(0.05),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+          border: Border.all(
+            color: AppTheme.primaryColor.withOpacity(0.2),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryColor.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.lightbulb,
-                  color: theme.colorScheme.primary,
-                  size: 32,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '温和引导',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+            AnimatedWidgets.slideInLeft(
+              delay: const Duration(milliseconds: 300),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(AppTheme.spacingM),
+                    decoration: BoxDecoration(
+                      gradient: AppTheme.primaryGradient,
+                      borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.primaryColor.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
                         ),
-                      ),
-                      Text(
-                        '当检测到目标应用启动时，会温和地提醒您并提供替代活动',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.psychology,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(width: AppTheme.spacingL),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '温和引导体验',
+                          style: AppTheme.headingLarge.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.primaryColor,
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: AppTheme.spacingS),
+                        Text(
+                          '当检测到目标应用启动时，会温和地提醒您并提供替代活动',
+                          style: AppTheme.bodyLarge.copyWith(
+                            color: AppTheme.textSecondary,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppTheme.spacingL),
+            AnimatedWidgets.slideInRight(
+              delay: const Duration(milliseconds: 400),
+              child: Container(
+                padding: const EdgeInsets.all(AppTheme.spacingM),
+                decoration: BoxDecoration(
+                  color: AppTheme.secondaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                  border: Border.all(
+                    color: AppTheme.secondaryColor.withOpacity(0.3),
+                    width: 1,
                   ),
                 ),
-              ],
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: AppTheme.secondaryColor,
+                      size: 20,
+                    ),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Expanded(
+                      child: Text(
+                        '这是一个演示页面，展示引导功能的工作原理',
+                        style: AppTheme.bodyMedium.copyWith(
+                          color: AppTheme.secondaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -71,195 +172,322 @@ class GuideScreen extends StatelessWidget {
   }
 
   Widget _buildActivitiesSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionTitle(title: '替代活动'),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: ActivityCard(
-                icon: Icons.air,
-                title: '深呼吸',
-                description: '缓解压力\n放松身心',
-                color: Colors.blue,
-                duration: '1分钟',
-                onTap: () => _showActivityDemo(context, '深呼吸'),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ActivityCard(
-                icon: Icons.local_drink,
-                title: '喝水',
-                description: '补充水分\n保持健康',
-                color: Colors.cyan,
-                duration: '30秒',
-                onTap: () => _showActivityDemo(context, '喝水'),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ActivityCard(
-                icon: Icons.self_improvement,
-                title: '伸展',
-                description: '活动身体\n缓解疲劳',
-                color: Colors.green,
-                duration: '2分钟',
-                onTap: () => _showActivityDemo(context, '伸展'),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+    final activities = [
+      {
+        'icon': Icons.air,
+        'title': '深呼吸',
+        'description': '缓解压力\n放松身心',
+        'color': AppTheme.primaryColor,
+      },
+      {
+        'icon': Icons.self_improvement,
+        'title': '冥想',
+        'description': '专注当下\n平静内心',
+        'color': AppTheme.secondaryColor,
+      },
+      {
+        'icon': Icons.directions_walk,
+        'title': '散步',
+        'description': '活动身体\n清醒头脑',
+        'color': AppTheme.accentColor,
+      },
+    ];
 
-
-
-  Widget _buildPreviewSection(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionTitle(title: '引导页面预览'),
-              const SizedBox(height: 16),
-              Expanded(
-                child: Container(
-                  width: double.infinity,
+    return AnimatedWidgets.fadeInContainer(
+      delay: const Duration(milliseconds: 500),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedWidgets.slideInLeft(
+            delay: const Duration(milliseconds: 600),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(AppTheme.spacingS),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
+                    color: AppTheme.secondaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.phone_android,
-                        size: 48,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '引导页面模拟',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '当检测到目标应用启动时\n会在此显示温和的引导界面',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[500],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => _showGuidePreview(context),
-                        child: const Text('查看完整预览'),
-                      ),
-                    ],
+                  child: Icon(
+                    Icons.psychology,
+                    color: AppTheme.secondaryColor,
+                    size: 20,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: AppTheme.spacingM),
+                Text(
+                  '替代活动',
+                  style: AppTheme.headingMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void _showActivityDemo(BuildContext context, String activityName) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$activityName 演示'),
-        content: Text('这里会显示 $activityName 的具体指导内容和交互界面。'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('关闭'),
+          const SizedBox(height: AppTheme.spacingL),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: AppTheme.spacingM,
+              mainAxisSpacing: AppTheme.spacingM,
+              childAspectRatio: 0.75,
+            ),
+            itemCount: activities.length,
+            itemBuilder: (context, index) {
+              final activity = activities[index];
+              return AnimatedWidgets.staggeredListItem(
+                index: index,
+                baseDelay: const Duration(milliseconds: 700),
+                child: _buildActivityCard(
+                  activity['icon'] as IconData,
+                  activity['title'] as String,
+                  activity['description'] as String,
+                  activity['color'] as Color,
+                ),
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  void _showGuidePreview(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog.fullscreen(
-        child: Container(
-          color: Colors.black.withOpacity(0.8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.lightbulb,
-                color: Colors.white,
-                size: 64,
+  Widget _buildActivityCard(IconData icon, String title, String description, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(AppTheme.spacingS),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white,
+            color.withOpacity(0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+        border: Border.all(
+          color: color.withOpacity(0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppTheme.spacingXS),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.3),
+                  blurRadius: 6,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingXS),
+          Flexible(
+            child: Text(
+              title,
+              style: AppTheme.bodyMedium.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
               ),
-              const SizedBox(height: 24),
-              const Text(
-                '温和提醒',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Flexible(
+            child: Text(
+              description,
+              style: AppTheme.bodySmall.copyWith(
+                color: AppTheme.textSecondary,
+                height: 1.2,
+                fontSize: 10,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPreviewSection(BuildContext context) {
+    return AnimatedWidgets.fadeInContainer(
+      delay: const Duration(milliseconds: 800),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedWidgets.slideInLeft(
+            delay: const Duration(milliseconds: 900),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(AppTheme.spacingS),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                  ),
+                  child: Icon(
+                    Icons.preview,
+                    color: AppTheme.accentColor,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: AppTheme.spacingM),
+                Text(
+                  '引导预览',
+                  style: AppTheme.headingMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingL),
+          AnimatedWidgets.staggeredListItem(
+            index: 0,
+            baseDelay: const Duration(milliseconds: 1000),
+            child: Container(
+              padding: const EdgeInsets.all(AppTheme.spacingL),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppTheme.accentColor.withOpacity(0.1),
+                    AppTheme.accentColor.withOpacity(0.05),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                border: Border.all(
+                  color: AppTheme.accentColor.withOpacity(0.3),
+                  width: 2,
                 ),
               ),
-              const SizedBox(height: 12),
-              const Text(
-                '您正要打开一个应用\n不如先尝试一些放松活动？',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Column(
                 children: [
-                  ElevatedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.air),
-                    label: const Text('深呼吸'),
+                  Icon(
+                    Icons.phone_android,
+                    color: AppTheme.accentColor,
+                    size: 48,
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.local_drink),
-                    label: const Text('喝水'),
+                  const SizedBox(height: AppTheme.spacingM),
+                  Text(
+                    '检测到应用启动',
+                    style: AppTheme.headingMedium.copyWith(
+                      color: AppTheme.accentColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.self_improvement),
-                    label: const Text('伸展'),
+                  const SizedBox(height: AppTheme.spacingS),
+                  Text(
+                    '您正在打开一个被监控的应用\n不如先试试深呼吸放松一下？',
+                    style: AppTheme.bodyMedium.copyWith(
+                      color: AppTheme.textSecondary,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  '继续使用应用',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    decoration: TextDecoration.underline,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionSection(BuildContext context) {
+    return AnimatedWidgets.fadeInContainer(
+      delay: const Duration(milliseconds: 1000),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppTheme.spacingL),
+        decoration: AppTheme.cardDecoration.copyWith(
+          gradient: AppTheme.primaryGradient,
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryColor.withOpacity(0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+              size: 48,
+            ),
+            const SizedBox(height: AppTheme.spacingM),
+            Text(
+              '开始体验温和引导',
+              style: AppTheme.headingMedium.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppTheme.spacingS),
+            Text(
+              '返回主页开启监控功能，开始您的专注之旅',
+              style: AppTheme.bodyMedium.copyWith(
+                color: Colors.white.withOpacity(0.9),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppTheme.spacingL),
+            PulseButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppTheme.spacingXL,
+                  vertical: AppTheme.spacingM,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  '返回主页',
+                  style: AppTheme.bodyLarge.copyWith(
+                    color: AppTheme.primaryColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

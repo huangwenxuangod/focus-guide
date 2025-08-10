@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/monitoring_provider.dart';
+import '../widgets/guide_overlay.dart';
 import 'home_screen.dart';
 import 'settings_screen.dart';
 import 'guide_screen.dart';
@@ -22,9 +25,33 @@ class _MainNavigatorState extends State<MainNavigator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _selectedIndex,
+            children: _screens,
+          ),
+          // 引导覆盖层监听器
+          Consumer<MonitoringProvider>(
+            builder: (context, monitoring, child) {
+              // 当需要显示引导覆盖层时，显示它
+              if (monitoring.shouldShowGuideOverlay) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (monitoring.shouldShowGuideOverlay && 
+                      !GuideOverlayManager.instance.isShowing) {
+                    // 使用监控提供者中的当前应用信息
+                    GuideOverlayManager.instance.showGuideOverlay(
+                      context,
+                      monitoring.currentAppName,
+                      monitoring.currentPackageName,
+                    );
+                  }
+                });
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
@@ -37,7 +64,7 @@ class _MainNavigatorState extends State<MainNavigator> {
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
-            label: '主页',
+            label: '首页',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
@@ -45,8 +72,8 @@ class _MainNavigatorState extends State<MainNavigator> {
             label: '设置',
           ),
           NavigationDestination(
-            icon: Icon(Icons.lightbulb_outline),
-            selectedIcon: Icon(Icons.lightbulb),
+            icon: Icon(Icons.psychology_outlined),
+            selectedIcon: Icon(Icons.psychology),
             label: '引导',
           ),
         ],

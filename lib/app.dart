@@ -5,8 +5,10 @@ import 'providers/permission_provider.dart';
 import 'providers/stats_provider.dart';
 import 'services/storage_service.dart';
 import 'screens/main_navigator.dart';
+import 'widgets/guide_overlay.dart';
+import 'theme/app_theme.dart';
 
-class FocusGuideApp extends StatelessWidget {
+class FocusGuideApp extends StatefulWidget {
   final StorageService storageService;
   
   const FocusGuideApp({
@@ -15,48 +17,46 @@ class FocusGuideApp extends StatelessWidget {
   });
 
   @override
+  State<FocusGuideApp> createState() => _FocusGuideAppState();
+}
+
+class _FocusGuideAppState extends State<FocusGuideApp> {
+  late MonitoringProvider _monitoringProvider;
+  late PermissionProvider _permissionProvider;
+  late StatsProvider _statsProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeProviders();
+  }
+
+  void _initializeProviders() {
+    _monitoringProvider = MonitoringProvider(widget.storageService);
+    _permissionProvider = PermissionProvider(widget.storageService);
+    _statsProvider = StatsProvider(widget.storageService);
+    
+    // 设置 Provider 之间的依赖关系
+    _monitoringProvider.setStatsProvider(_statsProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MonitoringProvider(storageService)),
-        ChangeNotifierProvider(create: (_) => PermissionProvider(storageService)),
-        ChangeNotifierProvider(create: (_) => StatsProvider(storageService)),
+        ChangeNotifierProvider.value(value: _monitoringProvider),
+        ChangeNotifierProvider.value(value: _permissionProvider),
+        ChangeNotifierProvider.value(value: _statsProvider),
       ],
       child: MaterialApp(
         title: '专注引导',
-        theme: _buildTheme(),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
         home: const MainNavigator(),
         debugShowCheckedModeBanner: false,
       ),
     );
   }
-  // 一个颜色的配置层
-  ThemeData _buildTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF6750A4), // 专注紫色
-        brightness: Brightness.light,
-      ),
-      appBarTheme: const AppBarTheme(
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      cardTheme: CardThemeData(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      ),
-    );
-  }
+
 }

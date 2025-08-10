@@ -24,6 +24,21 @@ dependencies:
   
   # 权限管理 (必需)
   permission_handler: ^12.0.1
+  
+  # 应用监控 (阶段二新增)
+  installed_apps: ^1.3.1
+  package_info_plus: ^8.0.2
+  
+  # 通知和弹窗 (阶段二新增)
+  flutter_local_notifications: ^17.2.2
+  rxdart: ^0.27.7
+  
+  # 动画和交互 (阶段二新增)
+  lottie: ^3.1.2
+  rive: ^0.13.1
+  flutter_animate: ^4.5.0
+  animated_text_kit: ^4.2.2
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

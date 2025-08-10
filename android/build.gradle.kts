@@ -1,7 +1,14 @@
 allprojects {
     repositories {
+        // 官方仓库优先，确保依赖完整性
         google()
         mavenCentral()
+        
+        // 阿里云镜像源作为加速备用
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        maven { url = uri("https://maven.aliyun.com/repository/jcenter") }
+        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { url = uri("https://maven.aliyun.com/repository/central") }
     }
 }
 

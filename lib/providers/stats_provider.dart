@@ -65,4 +65,9 @@ class StatsProvider extends ChangeNotifier {
   Future<void> cleanOldData() async {
     await _storage.cleanOldStats();
   }
+  
+  /// 刷新统计数据
+  Future<void> refreshStats() async {
+    _loadData();
+  }
 }

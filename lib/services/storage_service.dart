@@ -1,9 +1,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/app_models.dart';
+import '../utils/performance_monitor.dart';
 
 /// 极简本地存储服务 - 统一管理所有数据存储
-class StorageService {
+class StorageService with PerformanceTrackingMixin {
   static const String _appsBoxName = 'monitored_apps';
   static const String _statsBoxName = 'daily_stats';
   
@@ -26,9 +27,9 @@ class StorageService {
 
   Future<void> _initialize() async {
     try {
-
+    
       await Hive.initFlutter();
-      
+
       // 注册适配器
       if (!Hive.isAdapterRegistered(0)) {
         Hive.registerAdapter(MonitoredAppAdapter());
@@ -101,6 +102,7 @@ class StorageService {
   
   /// 获取所有监控应用
   List<MonitoredApp> getMonitoredApps() {
+    // 同步操作，直接返回结果
     return _appsBox.values.toList();
   }
 
